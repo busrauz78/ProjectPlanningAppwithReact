@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 const Navbar = (props) =>{
 
    const {auth,profile} =props;
-   const LinkSelector=auth.uid?<SignInLink profile={profile.initials} />:<SignOutLink />;
+   const LinkSelector=auth.uid?<SignInLink userName={profile.userName} />:<SignOutLink />;
 return(
     <nav className="nav-wrapper blue">
     <div className="container">

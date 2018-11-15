@@ -3,12 +3,17 @@ import {NavLink} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {signout} from '../../store/actions/authaction';
  const SignInLink= (props)=>{
+const name=props.userName&&props.userName.split(" ");
+const shortName=name&&name.map(letter=>{
+return letter[0]
+})
+const brandName=shortName&&shortName.join("")
 
 return(
     <ul className="right">
     <li><NavLink to="/create">New Project</NavLink></li>
-    <li> <a href onClick={props.signout}>Sign Out</a></li>
-    <li><NavLink to="/" className="btn">{props.profile}</NavLink></li>
+    <li><NavLink to="/profile"><button  className="btn waves-effect waves-light btn-floating">{brandName}</button></NavLink></li>
+    <li> <button  className="btn waves-effect waves-light red" onClick={props.signout}>Sign Out<i className="fas fa-sign-out-alt right"></i></button></li>
 
     
     </ul>
