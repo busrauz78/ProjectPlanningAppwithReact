@@ -4,7 +4,7 @@ export const createProject = (project) => {
     
     const id=getState().firebase.auth.uid;
    
-      getFirestore().collection('projects').add({
+      getFirestore().collection('users').doc(id).collection('projects').add({
         ...project,
         userName:username,
         authorId: id,

@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import {compose} from 'redux';
 import moment from 'moment';
+import _ from 'lodash';
 import {NavLink} from 'react-router-dom'
 const Recent =(props)=> {
 const{projects}=props;
-console.log(projects);
+
  if(projects){
      return (
         <div className="container">
@@ -22,17 +23,25 @@ console.log(projects);
  }
 }
 
-const mapStateToProps = (state)=>{
-const auth=state.firebase.auth
-const projects=state.firestore.ordered.projects
-    return{
-projects:projects && projects.filter((project)=>{return project.authorId==auth.uid})
+const mapStateProps= (state) => {
+  
+    const    auth=state.firebase.auth
+      const project=_.map(state.firestore.ordered.users,(user)=>{
+        return user.id===auth.uid?user.projects:null
+      })
+      const arr = _.map(project[0], (val) => {
+        return val
+      });
+    
+      return{
+        projects:arr,
+     auth:auth
+      }
+    
     }
-}
-
-export default compose(
-    connect(mapStateToProps),
-    firestoreConnect([
-      {collection:"projects"}
-    ])
-    )(Recent);
+    export default compose(
+      connect(mapStateProps),
+      firestoreConnect((props)=>[
+        { collection: 'users', doc: props.auth.uid, subcollections: [{ collection: 'projects' }] }
+      ]
+      ))(Recent);

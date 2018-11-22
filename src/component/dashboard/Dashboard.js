@@ -1,5 +1,5 @@
 import React ,{Component}from 'react';
-
+import _  from 'lodash'
 import ProjectList from '../project/ProjectList';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
@@ -23,16 +23,24 @@ class Dashboard extends Component {
   }
 }
 const mapStateProps= (state) => {
+  
+const    auth=state.firebase.auth
+  const project=_.map(state.firestore.ordered.users,(user)=>{
+    return user.id===auth.uid?user.projects:null
+  })
+  const arr = _.map(project[0], (val) => {
+    return val
+  });
 
   return{
-    projects:state.firestore.ordered.projects,
-    auth:state.firebase.auth
+    projects:arr,
+ auth:auth
   }
 
 }
 export default compose(
   connect(mapStateProps),
-  firestoreConnect([
-    {collection:"projects"}
-  ])
-  )(Dashboard);
+  firestoreConnect((props)=>[
+    { collection: 'users', doc: props.auth.uid, subcollections: [{ collection: 'projects' }] }
+  ]
+  ))(Dashboard);
